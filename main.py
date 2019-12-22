@@ -1,3 +1,4 @@
+#!/usr/local/bin/python3
 """
 A simple app to create a JWT token.
 """
@@ -35,6 +36,7 @@ def _logger():
 
 LOG = _logger()
 LOG.debug("Starting with log level: %s" % LOG_LEVEL )
+print ('Starting......flask server with log level %s' % LOG_LEVEL)
 APP = Flask(__name__)
 
 def require_jwt(function):
@@ -56,10 +58,22 @@ def require_jwt(function):
     return decorated_function
 
 
+'''
+            curl -X POST http://localhost:5000/ \
+                 -H 'content-type: application/json' \
+                 
+'''
+
 @APP.route('/', methods=['POST', 'GET'])
 def health():
     return jsonify("Healthy")
 
+
+'''
+    export TOKEN=`curl -d '{"email":"scott@me.com","password":"chachacha"}' \
+            -H "Content-Type: application/json"  \
+            -X POST localhost:80/auth  | jq -r '.token'`
+'''
 
 @APP.route('/auth', methods=['POST'])
 def auth():
@@ -81,6 +95,12 @@ def auth():
 
     return jsonify(token=_get_jwt(user_data).decode('utf-8'))
 
+
+'''
+        curl --request GET 'http://127.0.0.1:80/contents'  \
+                -H "Authorization: Bearer ${TOKEN}" | jq .
+                 
+'''
 
 @APP.route('/contents', methods=['GET'])
 def decode_jwt():
