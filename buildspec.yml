@@ -23,7 +23,7 @@ phases:
         - $(aws ecr get-login --no-include-email)
         - export KUBECONFIG=$HOME/.kube/config
         - printf 'start testing'
-        - pip3 install pytest
+        - pip install -r requirements.txt
         - pytest
         - printf 'End pre-build'
   build:
